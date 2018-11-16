@@ -51,7 +51,7 @@ public class PayFortPayment {
     public final static String PURCHASE = "PURCHASE";
     private final static String SDK_TOKEN = "SDK_TOKEN";
 
-    private final static String WS_GET_TOKEN = BuildConfig.TOKEN_URL;
+    private final static String WS_GET_TOKEN = "";
 
     //Statics
     public final static String MERCHANT_IDENTIFIER = "";
