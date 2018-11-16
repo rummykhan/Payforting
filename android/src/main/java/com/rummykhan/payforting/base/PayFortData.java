@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by basselchaitani on 8/1/18
+ * Created by rummykhan on 17/11/18
  */
 public class PayFortData implements Parcelable {
 

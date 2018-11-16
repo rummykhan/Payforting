@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by basselchaitani on 8/2/18
+ * Created by rummykhan on 17/11/18
  */
 public class PayFortPaymentResponse implements Parcelable {
 
