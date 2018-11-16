@@ -1,6 +1,9 @@
 
 import { NativeModules } from 'react-native';
 
-const { RNPayforting } = NativeModules;
+const { RNPayforting, ToastExample } = NativeModules;
 
-export default RNPayforting;
+export default {
+    RNPayforting,
+    ToastExample
+};
