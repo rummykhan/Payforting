@@ -1,7 +1,7 @@
 
-#import "RNPayforting.h"
+#import "Payforting.h"
 
-@implementation RNPayforting
+@implementation Payforting
 
 - (dispatch_queue_t)methodQueue
 {
