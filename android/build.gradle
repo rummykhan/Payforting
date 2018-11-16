@@ -31,10 +31,8 @@ repositories {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    api fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     compile 'com.facebook.react:react-native:+'
-
-    implementation(name:'FORTSDKv1.4.4', ext:'aar')
 
     api 'com.victor:lib:1.0.1'
     api 'com.google.code.gson:gson:2.8.0'
