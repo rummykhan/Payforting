@@ -6,7 +6,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 
-public class RNPayfortingModule extends ReactContextBaseJavaModule {
+public class PayfortingModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
 
