@@ -19,4 +19,9 @@ public class RNPayfortingModule extends ReactContextBaseJavaModule {
   public String getName() {
     return "RNPayforting";
   }
+
+  @ReactMethod
+    public void logMessage(String message) {
+      System.out.println(message);
+    }
 }
