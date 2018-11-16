@@ -1,5 +1,3 @@
-// CustomToastPackage.java
-
 package com.rummykhan.payforting;
 
 import com.facebook.react.ReactPackage;

@@ -1,5 +1,3 @@
-// ToastModule.java
-
 package com.rummykhan.payforting;
 
 import android.widget.Toast;
