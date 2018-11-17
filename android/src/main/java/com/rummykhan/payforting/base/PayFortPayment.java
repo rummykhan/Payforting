@@ -122,7 +122,8 @@ public class PayFortPayment {
                     PayFortData payFortData = gson.fromJson(response.toString(), PayFortData.class);
                     payFortData.setPaymentResponse(response.toString());
 
-                    promise.resolve(payFortData);
+                    System.out.println(response.toString());
+                    promise.resolve(response.toString());
                 }
 
                 @Override
@@ -148,8 +149,7 @@ public class PayFortPayment {
             HashMap<String, Object> parameters = new HashMap<>();
             parameters.put("amount", String.valueOf(payFortData.getAmount()));
             parameters.put("command", payFortData.getCommand());
-            System.out.println("currency: "+payFortData.getCurrency());
-            parameters.put("currency", "AED");
+            parameters.put("currency", payFortData.getCurrency());
             parameters.put("customer_email", payFortData.getCustomerEmail());
             parameters.put("language", payFortData.getLanguage());
             parameters.put("merchant_reference", payFortData.getMerchantReference());

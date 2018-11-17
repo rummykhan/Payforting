@@ -8,12 +8,21 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.payfort.fort.android.sdk.base.callbacks.FortCallBackManager;
 import com.payfort.fort.android.sdk.base.callbacks.FortCallback;
+import java.util.*;
+import com.payfort.fort.android.sdk.activities.InitSecureConnectionActivity;
+import com.payfort.sdk.android.dependancies.models.FortRequest;
+import android.content.Intent;
 
-public class PayfortingModule extends ReactContextBaseJavaModule implements OnPaymentRequestCallBack {
+public class PayfortingModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
 
     public static final String PURCHASE_EXCEPTION = "PURCHASE_EXCEPTION";
+
+    public static final String COMMAND_AUTHORIZATION = "COMMAND_AUTHORIZATION";
+    public static final String COMMAND_PURCHASE = "COMMAND_PURCHASE";
+    public static final String CURRENCY_AED = "CURRENCY_AED";
+    public static final String CURRENCY_SAR = "CURRENCY_SAR";
 
     public PayfortingModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -27,7 +36,7 @@ public class PayfortingModule extends ReactContextBaseJavaModule implements OnPa
 
     @Override
     public Map<String, Object> getConstants() {
-        final Map<String, String> constants = new HashMap<>();
+        final Map<String, Object> constants = new HashMap<>();
 
         constants.put(COMMAND_AUTHORIZATION, PayFortPayment.AUTHORIZATION);
         constants.put(COMMAND_PURCHASE, PayFortPayment.PURCHASE);
@@ -40,6 +49,15 @@ public class PayfortingModule extends ReactContextBaseJavaModule implements OnPa
     @ReactMethod
     public void logMessage(String message) {
         System.out.println(message);
+    }
+
+    @ReactMethod
+    public void showActivity() {
+        Intent openSDK = new Intent(this.reactContext.getCurrentActivity(), InitSecureConnectionActivity.class);
+        openSDK.putExtra("merchantReq", new FortRequest());
+        openSDK.putExtra("environment", "https://sbcheckout.payfort.com");
+        openSDK.putExtra("showLoading", true);
+        this.reactContext.getCurrentActivity().startActivityForResult(openSDK, 1);
     }
 
     //TODO: Add language to Exposed constants
