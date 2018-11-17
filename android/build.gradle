@@ -39,5 +39,6 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.0'
     api 'com.shamanland:fonticon:0.1.8'
     api 'com.nispok:snackbar:2.11.0'
+    api 'com.google.guava:guava:23.3-android'
 }
   

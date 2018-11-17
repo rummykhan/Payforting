@@ -33,11 +33,12 @@ import com.facebook.react.bridge.Promise;
 public class PayFortPayment {
 
     //Request key for response
-    public static final int RESPONSE_GET_TOKEN = 111;
-    public static final int RESPONSE_PURCHASE = 222;
-    public static final int RESPONSE_PURCHASE_CANCEL = 333;
-    public static final int RESPONSE_PURCHASE_SUCCESS = 444;
-    public static final int RESPONSE_PURCHASE_FAILURE = 555;
+    public static final String RESPONSE_GET_TOKEN = "RESPONSE_GET_TOKEN";
+    public static final String RESPONSE_PURCHASE = "RESPONSE_PURCHASE";
+    public static final int RESPONSE_PURCHASE_INT = 111;
+    public static final String RESPONSE_PURCHASE_CANCEL = "RESPONSE_PURCHASE_CANCEL";
+    public static final String RESPONSE_PURCHASE_SUCCESS = "RESPONSE_PURCHASE_SUCCESS";
+    public static final String RESPONSE_PURCHASE_FAILURE = "RESPONSE_PURCHASE_FAILURE";
 
     // WS params
     private final static String KEY_MERCHANT_IDENTIFIER = "merchant_identifier";
@@ -52,16 +53,17 @@ public class PayFortPayment {
     public final static String PURCHASE = "PURCHASE";
     private final static String SDK_TOKEN = "SDK_TOKEN";
 
-    private final static String WS_GET_TOKEN = "";
+    // Url
+    private static String WS_GET_TOKEN = "";
 
     public final static String URL_SANDBOX = "https://sbpaymentservices.payfort.com/FortAPI/paymentApi/";
     public final static String URL_PRODUCTION = "https://checkout.payfort.com/FortAPI/paymentPage";
 
     //S tatics
-    public final static String MERCHANT_IDENTIFIER = "";
-    public final static String ACCESS_CODE = "";
-    public final static String SHA_REQUEST_PHRASE = "";
-    public final static String SHA_RESPONSE_PHRASE = "";
+    public static String MERCHANT_IDENTIFIER = "";
+    public static String ACCESS_CODE = "";
+    public static String SHA_REQUEST_PHRASE = "";
+    public static String SHA_RESPONSE_PHRASE = "";
 
     // ALgorithm
     private final static String SHA_TYPE = "SHA-256";
@@ -99,14 +101,19 @@ public class PayFortPayment {
 
     private void requestPurchase() {
         try {
-            FortSdk.getInstance().registerCallback(context, getPurchaseFortRequest(), FortSdk.ENVIRONMENT.TEST, RESPONSE_PURCHASE, fortCallback, true, new FortInterfaces.OnTnxProcessed() {
+            //TODO: Fix the FortSdk.Environment.Test to User
+            FortSdk.getInstance().registerCallback(context, getPurchaseFortRequest(), FortSdk.ENVIRONMENT.TEST, RESPONSE_PURCHASE_INT, fortCallback, true, new FortInterfaces.OnTnxProcessed() {
                 @Override
                 public void onCancel(Map<String, Object> requestParamsMap, Map<String, Object> responseMap) {
                     JSONObject response = new JSONObject(responseMap);
                     PayFortData payFortData = gson.fromJson(response.toString(), PayFortData.class);
                     payFortData.setPaymentResponse(response.toString());
 
-                    promise.reject(RESPONSE_PURCHASE_CANCEL, payFortData);
+                    System.out.println("onCancel");
+                    System.out.println(response.toString());
+
+                    // TODO: Proper Promise Cancellation Message
+                    promise.reject(RESPONSE_PURCHASE_CANCEL, RESPONSE_PURCHASE_CANCEL);
                 }
 
                 @Override
@@ -124,7 +131,10 @@ public class PayFortPayment {
                     PayFortData payFortData = gson.fromJson(response.toString(), PayFortData.class);
                     payFortData.setPaymentResponse(response.toString());
 
-                    promise.reject(RESPONSE_PURCHASE_FAILURE, payFortData);
+                    System.out.println("onFailure");
+                    System.out.println(response.toString());
+                    // TODO: Proper Promise Rejected Message
+                    promise.reject(RESPONSE_PURCHASE_FAILURE, RESPONSE_PURCHASE_FAILURE);
                 }
             });
         } catch (Exception e) {
@@ -138,7 +148,8 @@ public class PayFortPayment {
             HashMap<String, Object> parameters = new HashMap<>();
             parameters.put("amount", String.valueOf(payFortData.getAmount()));
             parameters.put("command", payFortData.getCommand());
-            parameters.put("currency", payFortData.getCurrency());
+            System.out.println("currency: "+payFortData.getCurrency());
+            parameters.put("currency", "AED");
             parameters.put("customer_email", payFortData.getCustomerEmail());
             parameters.put("language", payFortData.getLanguage());
             parameters.put("merchant_reference", payFortData.getMerchantReference());
@@ -188,13 +199,23 @@ public class PayFortPayment {
             super.onPostExecute(response);
 
             try {
+                System.out.println("onPostExecute");
+                System.out.println(response);
+
                 PayFortData payFortData = gson.fromJson(response, PayFortData.class);
                 if (!TextUtils.isEmpty(payFortData.getSdkToken())) {
+
+                    System.out.println("gotSdkToken");
+                    System.out.println(payFortData.getSdkToken());
+
                     sdkToken = payFortData.getSdkToken();
                     requestPurchase();
                 } else {
                     payFortData.setPaymentResponse(response);
-                    mOnPaymentRequestCallBack.onPaymentRequestResponse(RESPONSE_GET_TOKEN, payFortData);
+
+                    System.out.println("sdkTokenIsEmpty");
+
+                    promise.reject(PayfortingModule.PURCHASE_EXCEPTION);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

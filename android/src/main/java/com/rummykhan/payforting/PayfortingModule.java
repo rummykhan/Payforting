@@ -6,6 +6,8 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
+import com.payfort.fort.android.sdk.base.callbacks.FortCallBackManager;
+import com.payfort.fort.android.sdk.base.callbacks.FortCallback;
 
 public class PayfortingModule extends ReactContextBaseJavaModule implements OnPaymentRequestCallBack {
 
@@ -40,6 +42,7 @@ public class PayfortingModule extends ReactContextBaseJavaModule implements OnPa
         System.out.println(message);
     }
 
+    //TODO: Add language to Exposed constants
     @ReactMethod
     public void sendCommand(String command,
                             String amount,
@@ -64,10 +67,10 @@ public class PayfortingModule extends ReactContextBaseJavaModule implements OnPa
             payFortData.setMerchantReference(String.valueOf(System.currentTimeMillis()));
 
             PayFortPayment payFortPayment = new PayFortPayment(
-                    this.reactContext,
+                    this.reactContext.getCurrentActivity(),
                     currentLanguage,
-                    mFortCallBackManager,
-                    PayfortingModule.this
+                    FortCallback.Factory.create(),
+                    promise
             );
 
             String url = PayFortPayment.URL_SANDBOX;
@@ -81,7 +84,7 @@ public class PayfortingModule extends ReactContextBaseJavaModule implements OnPa
             payFortPayment.setShaRequestPhrase(shaRequestPhrase);
             payFortPayment.setShaResponsePhrase(shaResponsePhrase);
 
-            payFortPayment.requestForPayment(payFortData, promise);
+            payFortPayment.requestForPayment(payFortData);
 
         } catch (Exception e) {
             promise.reject(PayfortingModule.PURCHASE_EXCEPTION, e);
